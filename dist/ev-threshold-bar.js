@@ -42,7 +42,7 @@
      * Observer that calculates the scale factor when the extremes of the threshold bar are changed.
      *
      * @private
-     */_scaleDataChanged:function _scaleDataChanged(){var thresholdEl=Polymer.dom(this.root).querySelector('.threshold-bar-container');if(this.max&&this.min){if(thresholdEl&&thresholdEl.clientWidth){var factor=thresholdEl.clientWidth/(this.max-this.min);this.set('_scaleFactor',factor)}else{setTimeout(function(){this._scaleDataChanged()}.bind(this),100)}}},/**
+     */_scaleDataChanged:function _scaleDataChanged(){var thresholdEl=Polymer.dom(this.root).querySelector('.threshold-bar-container');if(this._checkValuesSet(false)){if(thresholdEl&&thresholdEl.clientWidth){var factor=thresholdEl.clientWidth/(this.max-this.min);this.set('_scaleFactor',factor)}else{setTimeout(function(){this._scaleDataChanged()}.bind(this),100)}}},/**
      * Observer that orders the threshold configuration based on the min property.
      *
      * @param config - The list of threshold configurations
@@ -52,15 +52,21 @@
      *
      * @return {string} - The style string
      * @private
-     */_getMarkerLineStyle:function _getMarkerLineStyle(){if(this.value&&this.max&&this.min&&this._scaleFactor){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor;return'left: '+position+'px;'}return''},/**
+     */_getMarkerLineStyle:function _getMarkerLineStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor;return'left: '+position+'px;'}return''},/**
      * Calculates the position of the Marker Icon in the threshold bar
      *
      * @return {string} - The style string
      * @private
-     */_getMarkerStyle:function _getMarkerStyle(){if(this.value&&this.max&&this.min&&this._scaleFactor){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-4;return'left: '+position+'px;'}return'display: none;'},/**
+     */_getMarkerStyle:function _getMarkerStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-4;return'left: '+position+'px;'}return'display: none;'},/**
      * Calculates the position of the value label in the threshold bar
      *
      * @return {string} - The style string
      * @private
-     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span');spanEl.style.display='block';if(this.value&&this.max&&this.min&&this._scaleFactor){var position=Number(this.value),spanSize=spanEl.clientWidth;position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-spanSize+4;position=position<0?Number(this.value)*this._scaleFactor-4:position;return'left: '+position+'px;'}return'display: none;'}})})();
+     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span');spanEl.style.display='block';if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value),spanSize=spanEl.clientWidth;position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-spanSize+4;position=position<0?Number(this.value)*this._scaleFactor-4:position;return'left: '+position+'px;'}return'display: none;'},/**
+     * Verifies that values were set for the base properties min, max and value.
+     *
+     * @param includeValue - Includes the property value in the check
+     * @return {boolean} - Whether the values were set or not
+     * @private
+     */_checkValuesSet:function _checkValuesSet(includeValue){var min=this.min!==null&&this.min!==undefined,max=this.max!==null&&this.max!==undefined,value=this.value!==null&&this.value!==undefined;return includeValue?min&&max&&value:min&&max}})})();
 //# sourceMappingURL=ev-threshold-bar.js.map
