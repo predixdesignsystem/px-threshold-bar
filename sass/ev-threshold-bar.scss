@@ -1,0 +1,91 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+//
+// Sass for the for the ev-threshold-bar component
+//
+// @author Ricardo Breder
+//
+
+// Settings
+@import "px-colors-design/_settings.colors.scss";
+
+// Colors
+$thresholdMarkerColor: var(--ev-threshold-bar-marker-color, #ffffff);
+$thresholdMarkerLineColor: var(--ev-threshold-bar-line-color, #ffffff);
+$thresholdFontColor: var(--ev-threshold-bar-font-color, #ffffff);
+
+// Sizes
+$thresholdBarHeight: var(--ev-threshold-bar-height, 10px);
+$thresholdBarWidth: var(--ev-threshold-bar-width, 200px);
+$thresholdMarkerLineWidth: var(--ev-threshold-bar-line-width, 1px);
+
+// Tools
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+@import "px-viewport-design/_base.viewport.scss";
+@import "px-iconography-design/_base.iconography.scss";
+
+// Meta
+
+// Objects
+
+// Component
+
+.threshold-bar-container {
+  width: $thresholdBarWidth;
+  height: $thresholdBarHeight;
+}
+
+.threshold-bar {
+  height: $thresholdBarHeight;
+}
+
+.threshold-marker-line {
+  position: relative;
+  width: $thresholdMarkerLineWidth;
+  background-color: $thresholdMarkerLineColor;
+  height: $thresholdBarHeight;
+}
+
+.fa-caret-down {
+  position: relative;
+  color: $thresholdFontColor;
+}
+
+.threshold-bar-marker {
+  max-height: 13px;
+}
+
+.threshold-bar-value {
+  max-height: 10px;
+}
+
+.threshold-bar-value > span {
+  position: relative;
+  display: inline-block;
+}
+
+:host {
+  font-family: "GE Sans", "ge-sans", "GE Inspira", "ge-inspira", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: $thresholdFontColor;
+}
+
+// Trumps
+@import "px-spacing-responsive-design/_trumps.spacing-responsive.scss";
+@import "px-widths-responsive-design/_trumps.widths-responsive.scss";

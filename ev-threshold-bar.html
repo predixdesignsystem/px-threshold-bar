@@ -1,0 +1,69 @@
+<!--
+    Relative paths assume component is being run from inside an app or another component, where dependencies are flat
+    siblings. When this component is run from its own repo (e.g. tests, examples), we assume the server is started with
+    'gulp serve' (or similar server setup) to enable correct finding of bower dependencies for local runs.
+-->
+<link rel="import" href="../polymer/polymer.html"/>
+
+<link rel="import" href="css/ev-threshold-bar-styles.html">
+
+<!--
+The ev-threshold-bar is a 2D multi-threshold display bar component used to show multiple thresholds for a single
+data-source, while also showing the actual data value positioned in the overall threshold.
+The user can specify as many thresholds as they want, configuring the color for each threshold.
+They can also specify a unit of measure, if desired, using the uom property.
+To show only the threshold bar with no actual value, just don't set the value property.
+For more information, take a look at the API documentation below.
+
+### Usage
+
+    <ev-threshold-bar min="Min threshold value"
+                      max="Max threshold value"
+                      value="Current Value"
+                      uom="Unit of Measure"
+                      config="Configuration Object">
+    </ev-threshold-bar>
+
+
+### Styling
+The following variables are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--ev-threshold-bar-marker-color` | The color of the marker icon | `#ffffff`
+`--ev-threshold-bar-line-color` | The color of the marker line | `#ffffff`
+`--ev-threshold-bar-font-color` | The color of the value label | `#ffffff`
+`--ev-threshold-bar-height` | The height of the threshold bar | `10px`
+`--ev-threshold-bar-width` | The width of the threshold bar | `200px`
+`--ev-threshold-bar-line-width` | The width of the marker line  | `1px`
+
+
+@element ev-threshold-bar
+@blurb The ev-threshold-bar is a 2D multi-threshold display bar component
+@homepage index.html
+@demo index.html
+-->
+
+<dom-module id="ev-threshold-bar">
+  <template>
+    <style include="ev-threshold-bar-styles"></style>
+    <div class="ev-threshold-bar-container flex flex--col flex--top">
+      <div class="threshold-bar-value-container flex flex--col">
+        <div class="threshold-bar-value">
+          <span style$="{{_getValueStyle(value, min, max, _scaleFactor, uom)}}">{{value}}{{uom}}</span>
+        </div>
+        <div class="threshold-bar-marker">
+          <i class="fa fa-caret-down" style$="{{_getMarkerStyle(value, min, max, _scaleFactor)}}"></i>
+        </div>
+      </div>
+      <div class="threshold-bar-container flex flex--row flex--top">
+        <div class="threshold-marker-line" style$="{{_getMarkerLineStyle(value, min, max, _scaleFactor)}}"></div>
+        <template is="dom-repeat" items="{{config}}" as="tConfig">
+          <div class="threshold-bar" style$="{{_getStyles(tConfig, _scaleFactor, reversed)}}"></div>
+        </template>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script src="dist/ev-threshold-bar.js"></script>
