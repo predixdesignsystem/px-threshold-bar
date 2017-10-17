@@ -112,7 +112,7 @@
     _scaleDataChanged: function () {
       let thresholdEl = Polymer.dom(this.root).querySelector('.threshold-bar-container');
 
-      if (this.max && this.min) {
+      if (this._checkValuesSet(false)) {
         if (thresholdEl && thresholdEl.clientWidth) {
           let factor = (thresholdEl.clientWidth / (this.max - this.min));
 
@@ -153,7 +153,7 @@
      * @private
      */
     _getMarkerLineStyle: function () {
-      if (this.value && this.max && this.min && this._scaleFactor) {
+      if (this._checkValuesSet(true) && this._scaleFactor) {
         let position = Number(this.value);
 
         position = position > this.max ? this.max : position;
@@ -173,7 +173,7 @@
      * @private
      */
     _getMarkerStyle: function () {
-      if (this.value && this.max && this.min && this._scaleFactor) {
+      if (this._checkValuesSet(true) && this._scaleFactor) {
         let position = Number(this.value);
 
         position = position > this.max ? this.max : position;
@@ -197,7 +197,7 @@
 
       spanEl.style.display = 'block';
 
-      if (this.value && this.max && this.min && this._scaleFactor) {
+      if (this._checkValuesSet(true) && this._scaleFactor) {
         let position = Number(this.value),
             spanSize = spanEl.clientWidth;
 
@@ -210,6 +210,21 @@
       }
 
       return 'display: none;';
+    },
+
+    /**
+     * Verifies that values were set for the base properties min, max and value.
+     *
+     * @param includeValue - Includes the property value in the check
+     * @return {boolean} - Whether the values were set or not
+     * @private
+     */
+    _checkValuesSet(includeValue) {
+      let min = this.min !== null && this.min !== undefined,
+          max = this.max !== null && this.max !== undefined,
+          value = this.value !== null && this.value !== undefined;
+
+      return includeValue ? min && max && value : min && max;
     }
   });
 })();
