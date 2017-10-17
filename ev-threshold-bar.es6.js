@@ -219,7 +219,7 @@
      * @return {boolean} - Whether the values were set or not
      * @private
      */
-    _checkValuesSet(includeValue) {
+    _checkValuesSet: function(includeValue) {
       let min = this.min !== null && this.min !== undefined,
           max = this.max !== null && this.max !== undefined,
           value = this.value !== null && this.value !== undefined;
