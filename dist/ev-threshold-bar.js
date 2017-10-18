@@ -62,7 +62,7 @@
      *
      * @return {string} - The style string
      * @private
-     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span'),spanSize=void 0;spanEl.style.display='block';spanSize=spanEl.clientWidth;if(spanSize){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-spanSize+4;position=position<0?Number(this.value)*this._scaleFactor-4:position;return'left: '+position+'px;'}}else{setTimeout(function(){this._refreshStyle=!this._refreshStyle}.bind(this),100)}return'display: none;'},/**
+     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span');spanEl.style.display='block';if(this._checkValuesSet(true)&&this._scaleFactor){var spanSize=spanEl.clientWidth;if(spanSize){var position=Number(this.value);position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-spanSize+4;position=position<0?Number(this.value)*this._scaleFactor-4:position;return'left: '+position+'px;'}else{setTimeout(function(){this._refreshStyle=!this._refreshStyle}.bind(this),100)}}return'display: none;'},/**
      * Verifies that values were set for the base properties min, max and value.
      *
      * @param includeValue - Includes the property value in the check

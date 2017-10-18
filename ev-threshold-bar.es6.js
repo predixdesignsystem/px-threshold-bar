@@ -197,29 +197,31 @@
      * @private
      */
     _getValueStyle: function () {
-      let spanEl = Polymer.dom(this.root).querySelector('.threshold-bar-value > span'),
-          spanSize;
+      let spanEl = Polymer.dom(this.root).querySelector('.threshold-bar-value > span');
 
       spanEl.style.display = 'block';
-      spanSize = spanEl.clientWidth;
 
-      if (spanSize) {
+
+
         if (this._checkValuesSet(true) && this._scaleFactor) {
-          let position = Number(this.value);
+          let spanSize = spanEl.clientWidth;
 
-          position = position > this.max ? this.max : position;
-          position = position < this.min ? this.min : position;
-          position = (position * this._scaleFactor) - spanSize + 4;
-          position = position < 0 ? ((Number(this.value) * this._scaleFactor) - 4) : position;
+          if (spanSize) {
+            let position = Number(this.value);
 
-          return 'left: ' + position + 'px;';
+            position = position > this.max ? this.max : position;
+            position = position < this.min ? this.min : position;
+            position = (position * this._scaleFactor) - spanSize + 4;
+            position = position < 0 ? ((Number(this.value) * this._scaleFactor) - 4) : position;
+
+            return 'left: ' + position + 'px;';
+          }
+          else {
+            setTimeout(function () {
+              this._refreshStyle = !this._refreshStyle;
+            }.bind(this), 100);
+          }
         }
-      }
-      else {
-        setTimeout(function () {
-          this._refreshStyle = !this._refreshStyle;
-        }.bind(this), 100);
-      }
 
       return 'display: none;';
     },
