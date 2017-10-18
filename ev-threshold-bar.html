@@ -50,7 +50,7 @@ Custom property | Description | Default
     <div class="ev-threshold-bar-container flex flex--col flex--top">
       <div class="threshold-bar-value-container flex flex--col">
         <div class="threshold-bar-value">
-          <span style$="{{_getValueStyle(value, min, max, _scaleFactor, uom)}}">{{value}}{{uom}}</span>
+          <span style$="{{_getValueStyle(value, min, max, _scaleFactor, uom, _refreshStyle)}}">{{value}}{{uom}}</span>
         </div>
         <div class="threshold-bar-marker">
           <i class="fa fa-caret-down" style$="{{_getMarkerStyle(value, min, max, _scaleFactor)}}"></i>
