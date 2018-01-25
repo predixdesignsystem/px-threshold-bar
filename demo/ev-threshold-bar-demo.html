@@ -50,8 +50,9 @@
           min="{{props.min.value}}"
           max="{{props.max.value}}"
           config="{{props.config.value}}"
-          reversed$="{{props.reversed.value}}"
           value="{{props.value.value}}"
+          hide-value="{{props.hideValue.value}}"
+          hide-scale="{{props.hideScale.value}}"
           uom="{{props.uom.value}}">
         </ev-threshold-bar>
       </px-demo-component>
@@ -247,16 +248,22 @@
         inputType: 'code:JSON'
       },
 
-      reversed: {
+      value: {
+        type: Number,
+        defaultValue: 70,
+        inputType: 'text'
+      },
+
+      hideValue: {
         type: Boolean,
         defaultValue: false,
         inputType: 'toggle'
       },
 
-      value: {
-        type: Number,
-        defaultValue: 70,
-        inputType: 'text'
+      hideScale: {
+        type: Boolean,
+        defaultValue: false,
+        inputType: 'toggle'
       },
 
       uom: {

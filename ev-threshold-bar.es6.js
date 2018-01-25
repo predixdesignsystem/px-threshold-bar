@@ -26,11 +26,19 @@
       },
 
       /**
-       * Reverse the bar orientation.
+       * Prevents the value to be displayed on top of the bar
        *
-       * @property
        */
-      reversed: {
+      hideValue: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Prevents the scale to be displayed below the bar
+       *
+       */
+      hideScale: {
         type: Boolean,
         value: false
       },
@@ -102,10 +110,9 @@
      * @private
      */
     _getStyles: function (config) {
-      let width = ((config.max - config.min) * this._scaleFactor),
-          order = this.reversed ? this.config.length - config.order : config.order;
+      let width = ((config.max - config.min) * this._scaleFactor);
 
-      return 'width: ' + width + 'px; ' + 'background-color: ' + config.color + '; ' + 'order: ' + order + ';';
+      return 'width: ' + width + 'px; ' + 'background-color: ' + config.color + ';';
     },
 
     /**
@@ -158,11 +165,18 @@
      */
     _getMarkerLineStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
-        let position = Number(this.value);
+        let position = Number(this.value),
+            padding = 0;
+
+        if (document.querySelector('.scale-first-value')) {
+          padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+          padding = Number(padding.substr(0, padding.length - 2));
+        }
 
         position = position > this.max ? this.max : position;
         position = position < this.min ? this.min : position;
         position = position * this._scaleFactor;
+        position = this.hideScale ? position : position + padding;
 
         return 'left: ' + position + 'px;';
       }
@@ -178,11 +192,18 @@
      */
     _getMarkerStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
-        let position = Number(this.value);
+        let position = Number(this.value),
+            padding = 0;
+
+        if (document.querySelector('.scale-first-value')) {
+          padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+          padding = Number(padding.substr(0, padding.length - 2));
+        }
 
         position = position > this.max ? this.max : position;
         position = position < this.min ? this.min : position;
         position = (position * this._scaleFactor) - 4;
+        position = this.hideScale ? position : position + padding;
 
         return 'left: ' + position + 'px;';
       }
@@ -199,20 +220,25 @@
     _getValueStyle: function () {
       let spanEl = Polymer.dom(this.root).querySelector('.threshold-bar-value > span');
 
-      spanEl.style.display = 'block';
-
-
+      spanEl.style.display = this.hideValue ? 'none' : 'block';
 
         if (this._checkValuesSet(true) && this._scaleFactor) {
           let spanSize = spanEl.clientWidth;
 
           if (spanSize) {
-            let position = Number(this.value);
+            let position = Number(this.value),
+                padding = 0;
+
+            if (document.querySelector('.scale-first-value')) {
+              padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+              padding = Number(padding.substr(0, padding.length - 2));
+            }
 
             position = position > this.max ? this.max : position;
             position = position < this.min ? this.min : position;
             position = (position * this._scaleFactor) - spanSize + 4;
             position = position < 0 ? ((Number(this.value) * this._scaleFactor) - 4) : position;
+            position = this.hideScale ? position : position + padding;
 
             return 'left: ' + position + 'px;';
           }
@@ -239,6 +265,10 @@
           value = this.value !== null && this.value !== undefined;
 
       return includeValue ? min && max && value : min && max;
+    },
+
+    _hideScale: function() {
+      return this.hideScale ? 'hide-scale' : '';
     }
   });
 })();

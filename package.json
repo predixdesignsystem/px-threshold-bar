@@ -2,7 +2,7 @@
     "name": "ev-threshold-bar",
     "author": "General Electric",
     "description": "A web component",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "private": true,
     "extName" : null,
     "repository" :
