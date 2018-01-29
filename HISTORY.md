@@ -1,3 +1,8 @@
+v0.0.3
+==================
+* Fixes the marker positioning when using negative numbers
+* Adds automation tests
+
 v0.0.2
 ==================
 * Adds Threshold Scale under the bar

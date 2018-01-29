@@ -44,7 +44,7 @@
      * Observer that calculates the scale factor when the extremes of the threshold bar are changed.
      *
      * @private
-     */_scaleDataChanged:function _scaleDataChanged(){var thresholdEl=Polymer.dom(this.root).querySelector('.threshold-bar-container');if(this._checkValuesSet(false)){if(thresholdEl&&thresholdEl.clientWidth){var factor=thresholdEl.clientWidth/(this.max-this.min);this.set('_scaleFactor',factor)}else{setTimeout(function(){this._scaleDataChanged()}.bind(this),100)}}},/**
+     */_scaleDataChanged:function _scaleDataChanged(){var thresholdEl=Polymer.dom(this.root).querySelector('.threshold-bar-container');if(this._checkValuesSet(false)){if(thresholdEl&&thresholdEl.clientWidth&&thresholdEl.clientHeight){var factor=thresholdEl.clientWidth/(this.max-this.min);this.set('_scaleFactor',factor)}else{setTimeout(function(){this._scaleDataChanged()}.bind(this))}}},/**
      * Observer that orders the threshold configuration based on the min property.
      *
      * @param config - The list of threshold configurations
@@ -54,17 +54,17 @@
      *
      * @return {string} - The style string
      * @private
-     */_getMarkerLineStyle:function _getMarkerLineStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor;position=this.hideScale?position:position+padding;return'left: '+position+'px;'}return''},/**
+     */_getMarkerLineStyle:function _getMarkerLineStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=(position-this.min)*this._scaleFactor;position=this.hideScale?position:position+padding;return'left: '+position+'px;'}return''},/**
      * Calculates the position of the Marker Icon in the threshold bar
      *
      * @return {string} - The style string
      * @private
-     */_getMarkerStyle:function _getMarkerStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-4;position=this.hideScale?position:position+padding;return'left: '+position+'px;'}return'display: none;'},/**
+     */_getMarkerStyle:function _getMarkerStyle(){if(this._checkValuesSet(true)&&this._scaleFactor){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=(position-this.min)*this._scaleFactor-4;position=this.hideScale?position:position+padding;return'left: '+position+'px;'}return'display: none;'},/**
      * Calculates the position of the value label in the threshold bar
      *
      * @return {string} - The style string
      * @private
-     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span');spanEl.style.display=this.hideValue?'none':'block';if(this._checkValuesSet(true)&&this._scaleFactor){var spanSize=spanEl.clientWidth;if(spanSize){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-spanSize+4;position=position<0?Number(this.value)*this._scaleFactor-4:position;position=this.hideScale?position:position+padding;return'left: '+position+'px;'}else{setTimeout(function(){this._refreshStyle=!this._refreshStyle}.bind(this),100)}}return'display: none;'},/**
+     */_getValueStyle:function _getValueStyle(){var spanEl=Polymer.dom(this.root).querySelector('.threshold-bar-value > span');spanEl.style.display=this.hideValue?'none':'block';if(this._checkValuesSet(true)&&this._scaleFactor){var spanSize=spanEl.clientWidth;if(spanSize){var position=Number(this.value),padding=0;if(document.querySelector('.scale-first-value')){padding=window.getComputedStyle(document.querySelector('.scale-first-value'),false)['width'];padding=Number(padding.substr(0,padding.length-2))}position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=(position-this.min)*this._scaleFactor-spanSize+4;if(position<0){position=Number(this.value)-this.min;position=position>this.max?this.max:position;position=position<this.min?this.min:position;position=position*this._scaleFactor-4}position=this.hideScale?position:position+padding;return'left: '+position+'px;'}else{setTimeout(function(){this._refreshStyle=!this._refreshStyle}.bind(this),100)}}return'display: none;'},/**
      * Verifies that values were set for the base properties min, max and value.
      *
      * @param includeValue - Includes the property value in the check

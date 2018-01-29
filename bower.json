@@ -1,6 +1,6 @@
 {
   "name": "ev-threshold-bar",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "main": [
     "ev-threshold-bar.html"
   ],

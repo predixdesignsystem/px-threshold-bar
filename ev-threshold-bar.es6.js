@@ -124,7 +124,7 @@
       let thresholdEl = Polymer.dom(this.root).querySelector('.threshold-bar-container');
 
       if (this._checkValuesSet(false)) {
-        if (thresholdEl && thresholdEl.clientWidth) {
+        if (thresholdEl && thresholdEl.clientWidth && thresholdEl.clientHeight) {
           let factor = (thresholdEl.clientWidth / (this.max - this.min));
 
           this.set('_scaleFactor', factor);
@@ -132,7 +132,7 @@
         else {
           setTimeout(function() {
             this._scaleDataChanged();
-          }.bind(this), 100)
+          }.bind(this))
         }
       }
     },
@@ -175,7 +175,7 @@
 
         position = position > this.max ? this.max : position;
         position = position < this.min ? this.min : position;
-        position = position * this._scaleFactor;
+        position = (position - this.min) * this._scaleFactor;
         position = this.hideScale ? position : position + padding;
 
         return 'left: ' + position + 'px;';
@@ -202,7 +202,7 @@
 
         position = position > this.max ? this.max : position;
         position = position < this.min ? this.min : position;
-        position = (position * this._scaleFactor) - 4;
+        position = ((position - this.min) * this._scaleFactor) - 4;
         position = this.hideScale ? position : position + padding;
 
         return 'left: ' + position + 'px;';
@@ -236,8 +236,15 @@
 
             position = position > this.max ? this.max : position;
             position = position < this.min ? this.min : position;
-            position = (position * this._scaleFactor) - spanSize + 4;
-            position = position < 0 ? ((Number(this.value) * this._scaleFactor) - 4) : position;
+            position = ((position - this.min) * this._scaleFactor) - spanSize + 4;
+
+            if (position < 0) {
+              position = Number(this.value) - this.min;
+              position = position > this.max ? this.max : position;
+              position = position < this.min ? this.min : position;
+              position = (position * this._scaleFactor) - 4;
+            }
+
             position = this.hideScale ? position : position + padding;
 
             return 'left: ' + position + 'px;';
