@@ -1,8 +1,8 @@
-# ev-threshold-bar
+# px-threshold-bar
 
 ## Overview
 
-The ev-threshold-bar is a 2D multi-threshold display bar component
+The px-threshold-bar is a 2D multi-threshold display bar component
 
 ## Usage
 
@@ -19,19 +19,19 @@ Node, npm and bower are necessary to install the component and dependencies. web
 First, install the component via bower on the command line.
 
 ```
-bower install ev-threshold-bar --save
+bower install px-threshold-bar --save
 ```
 
 Second, import the component to your application with the following tag in your head.
 
 ```
-<link rel="import" href="/bower_components/ev-threshold-bar/ev-threshold-bar.html"/>
+<link rel="import" href="/bower_components/px-threshold-bar/px-threshold-bar.html"/>
 ```
 
 Finally, use the component in your application:
 
 ```
-Insert Your demo code here.
+<px-threshold-bar min="0" max="100" value="25" uom="%" config='[{"min": 0,"max": 50,"color": "red"}, {"min": 50,"max": 100,"color": "green"}]'></px-threshold-bar>
 ```
 
 <br />
@@ -39,7 +39,7 @@ Insert Your demo code here.
 
 ## Documentation
 
-Read the full API and view the demo [here](https://github.build.ge.com/pages//ev-components/ev-threshold-bar/ev-threshold-bar/).
+Read the full API and view the demo [here](https://github.build.ge.com/pages//ev-components/px-threshold-bar/px-threshold-bar/).
 
 The documentation in this repository is supplemental to the official Predix documentation, which is continuously updated and maintained by the Predix documentation team. Go to [http://predix.io](http://predix.io)  to see the official Predix documentation.
 
@@ -70,4 +70,4 @@ Navigate to the root of that server (e.g. http://localhost:8080/) in a browser t
 
 ## Known Issues
 
-Please use [Github Issues](https://github.build.ge.com/ev-components/ev-threshold-bar/issues) to submit any bugs you might find.
+Please use [Github Issues](https://github.build.ge.com/ev-components/px-threshold-bar/issues) to submit any bugs you might find.

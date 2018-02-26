@@ -1,14 +1,87 @@
-(function() {
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../px-icon-set/px-icon.html"/>
+<link rel="import" href="../px-icon-set/px-icon-set-utility.html"/>
+
+<link rel="import" href="css/px-threshold-bar-styles.html">
+
+<!--
+The px-threshold-bar is a linear multi-threshold simple bar chart used to show multiple thresholds for a single
+data-source, while also showing the actual data value positioned in the overall threshold.
+The user can specify as many thresholds as they want, configuring the color for each threshold.
+They can also specify a unit of measure, if desired, using the `uom` property.
+To show only the threshold bar with no actual value, don't set the value property.
+
+### Usage
+
+    <px-threshold-bar
+      min="0"
+      max="100"
+      value="25"
+      uom="%"
+      config='[{"min": 0,"max": 50,"color": "red"}, {"min": 50,"max": 100,"color": "green"}]'>
+    </px-threshold-bar>
+
+
+### Styling
+The following variables are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--px-threshold-bar-marker-color` | The color of the marker caret, line, and value | `black`
+`--px-threshold-bar-scale-color` | The color of the tick lines and labels | `gray`
+`--px-threshold-bar-height` | The height of the threshold bar | `10px`
+`--px-threshold-bar-width` | The width of the threshold bar | `200px`
+`--px-threshold-bar-line-width` | The width of the marker line  | `1px`
+
+
+@element px-threshold-bar
+@blurb The px-threshold-bar is a linear multi-threshold simple bar chart
+@homepage index.html
+@demo index.html
+-->
+
+<dom-module id="px-threshold-bar">
+  <template>
+    <style include="px-threshold-bar-styles"></style>
+    <div class="flex flex--col flex--top">
+      <div class="value-container flex flex--col">
+        <div class="value">
+          <span style$="{{_getValueStyle(value, min, max, _scaleFactor, uom, _refreshStyle, hideValue, hideScale)}}">{{value}}{{uom}}</span>
+        </div>
+        <div class="marker">
+          <px-icon class="caret" style$="{{_getMarkerStyle(value, min, max, _scaleFactor, hideScale)}}" icon="px-utl:caret-down"></px-icon>
+        </div>
+      </div>
+      <div class="container flex flex--top">
+        <div class="marker-line" style$="{{_getMarkerLineStyle(value, min, max, _scaleFactor, hideScale)}}"></div>
+        <template is="dom-repeat" items="{{config}}" as="tConfig">
+          <template is="dom-if" if="{{!index}}">
+            <div class="flex flex--col flex--end" style="margin-right: -1px;">
+              <div class="threshold-bar"></div>
+              <div class="scale__tick scale__value"></div>
+              <div class="scale__value--first scale__value">{{tConfig.min}}{{uom}}</div>
+            </div>
+          </template>
+          <div class="flex flex--col flex--end">
+            <div class="threshold-bar" style$="{{_getStyles(tConfig, _scaleFactor)}}"></div>
+            <div class="scale__tick scale__value"></div>
+            <div class="scale__value">{{tConfig.max}}{{uom}}</div>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
   Polymer({
 
-    is: 'ev-threshold-bar',
+    is: 'px-threshold-bar',
 
     properties: {
 
       /**
-       * Holds the min value for the threshold bar.
-       *
-       * @property
+       * The minimum value for the threshold bar.
        */
       min: {
         type: Number,
@@ -16,9 +89,7 @@
       },
 
       /**
-       * Holds the max value for the threshold bar.
-       *
-       * @property
+       * The maximum value for the threshold bar.
        */
       max: {
         type: Number,
@@ -26,8 +97,7 @@
       },
 
       /**
-       * Prevents the value to be displayed on top of the bar
-       *
+       * Prevents the value from being displayed on top of the bar.
        */
       hideValue: {
         type: Boolean,
@@ -35,22 +105,28 @@
       },
 
       /**
-       * Prevents the scale to be displayed below the bar
-       *
+       * Prevents the scale from being displayed below the bar.
        */
       hideScale: {
         type: Boolean,
-        value: false
+        value: false,
+        reflectToAttribute: true
       },
 
       /**
-       * Holds the thresholds configuration.
-       * The configuration should be an array of Objects with the following structure:
-       * {
-       *   min: <A number representing the begining of the threshold>,
-       *   max: <A number representing the end of the threshold>,
-       *   color: <A valid color for this specific bar (Hex / RGB)>
-       * }
+       * Configuration for the tresholds.
+       * The value should be an array of Objects with the following structure:
+       *
+       *     {
+       *       "min": {Number} beginning of the threshold,
+       *       "max": {Number} end of the threshold,
+       *       "color": {Hex / RGB} background color for the threshold
+       *     }
+       *
+       * Negative values are supported, but all thresholds should be contiguous
+       * (e.g. the max of one should be the min of the next one, with no gaps).
+       * If thresholds are defined so narrowly that the tick label will not fit
+       * inside the treshold, display issues may occur.
        */
       config: {
         type: Array,
@@ -61,9 +137,7 @@
 
       /**
        * The current value to be displayed on top of the threshold bar.
-       * If this property is null a value won't be show but the threshold bar will still be displayed.
-       *
-       * @property
+       * If this property is null a value won't be shown but the threshold bar will still be displayed.
        */
       value: {
         type: Number,
@@ -71,9 +145,8 @@
       },
 
       /**
-       * The unit of measure for the value, if any.
-       *
-       * @property
+       * The unit of measure for the value, if any. You should use one or two characters at most,
+       * as longer values for UOM may cause display issues.
        */
       uom: {
         type: String,
@@ -82,9 +155,6 @@
 
       /**
        * Holds the (pixel / range) scale factor used to calculate the threshold bars and value positioning.
-       *
-       * @property
-       * @private
        */
       _scaleFactor: {
         type: Number,
@@ -94,8 +164,7 @@
 
     observers: [
       '_configDataChanged(config)',
-      '_scaleDataChanged(min)',
-      '_scaleDataChanged(max)'
+      '_scaleDataChanged(min,max)'
     ],
 
     ready: function() {
@@ -104,10 +173,6 @@
 
     /**
      * Calculates the width of the specific threshold bars.
-     *
-     * @param config - The threshold configuration Object
-     * @return {string} - The style string
-     * @private
      */
     _getStyles: function (config) {
       let width = ((config.max - config.min) * this._scaleFactor);
@@ -117,11 +182,9 @@
 
     /**
      * Observer that calculates the scale factor when the extremes of the threshold bar are changed.
-     *
-     * @private
      */
     _scaleDataChanged: function () {
-      let thresholdEl = Polymer.dom(this.root).querySelector('.threshold-bar-container');
+      let thresholdEl = Polymer.dom(this.root).querySelector('.container');
 
       if (this._checkValuesSet(false)) {
         if (thresholdEl && thresholdEl.clientWidth && thresholdEl.clientHeight) {
@@ -132,16 +195,13 @@
         else {
           setTimeout(function() {
             this._scaleDataChanged();
-          }.bind(this))
+          }.bind(this));
         }
       }
     },
 
     /**
      * Observer that orders the threshold configuration based on the min property.
-     *
-     * @param config - The list of threshold configurations
-     * @private
      */
     _configDataChanged(config) {
       if (config && config.length) {
@@ -151,25 +211,19 @@
           return a.min - b.min;
         });
 
-        for (let i = 0; i < configLen; i++) {
-          config[i]['order'] = i;
-        }
       }
     },
 
     /**
      * Calculates the position of the Marker Line in the threshold bar
-     *
-     * @return {string} - The style string
-     * @private
      */
     _getMarkerLineStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
         let position = Number(this.value),
             padding = 0;
 
-        if (document.querySelector('.scale-first-value')) {
-          padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+        if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
+          padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
           padding = Number(padding.substr(0, padding.length - 2));
         }
 
@@ -186,17 +240,14 @@
 
     /**
      * Calculates the position of the Marker Icon in the threshold bar
-     *
-     * @return {string} - The style string
-     * @private
      */
     _getMarkerStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
         let position = Number(this.value),
             padding = 0;
 
-        if (document.querySelector('.scale-first-value')) {
-          padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+        if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
+          padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
           padding = Number(padding.substr(0, padding.length - 2));
         }
 
@@ -213,12 +264,9 @@
 
     /**
      * Calculates the position of the value label in the threshold bar
-     *
-     * @return {string} - The style string
-     * @private
      */
     _getValueStyle: function () {
-      let spanEl = Polymer.dom(this.root).querySelector('.threshold-bar-value > span');
+      let spanEl = Polymer.dom(this.root).querySelector('.value > span');
 
       spanEl.style.display = this.hideValue ? 'none' : 'block';
 
@@ -229,8 +277,8 @@
             let position = Number(this.value),
                 padding = 0;
 
-            if (document.querySelector('.scale-first-value')) {
-              padding = window.getComputedStyle(document.querySelector('.scale-first-value'), false)['width'];
+            if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
+              padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
               padding = Number(padding.substr(0, padding.length - 2));
             }
 
@@ -261,10 +309,6 @@
 
     /**
      * Verifies that values were set for the base properties min, max and value.
-     *
-     * @param includeValue - Includes the property value in the check
-     * @return {boolean} - Whether the values were set or not
-     * @private
      */
     _checkValuesSet: function(includeValue) {
       let min = this.min !== null && this.min !== undefined,
@@ -272,10 +316,6 @@
           value = this.value !== null && this.value !== undefined;
 
       return includeValue ? min && max && value : min && max;
-    },
-
-    _hideScale: function() {
-      return this.hideScale ? 'hide-scale' : '';
     }
   });
-})();
+</script>>

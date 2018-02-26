@@ -3,3 +3,5 @@ bower_components*
 .DS_Store
 .vscode
 .idea
+bower-*.json
+monogram-wdmk.png

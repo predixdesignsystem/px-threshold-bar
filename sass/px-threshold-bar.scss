@@ -1,0 +1,99 @@
+/*
+ * Copyright (c) 2014 GE Global Research. All rights reserved.
+ *
+ * The copyright to the computer software herein is the property of
+ * GE Global Research. The software may be used and/or copied only
+ * with the written permission of GE Global Research or in accordance
+ * with the terms and conditions stipulated in the agreement/contract
+ * under which the software has been supplied.
+ */
+
+//
+// Sass for the for the px-threshold-bar component
+//
+// @author Ricardo Breder
+//
+
+// Settings
+
+// Tools
+
+// Generic
+@import "px-normalize-design/_generic.normalize.scss";
+@import "px-box-sizing-design/_generic.box-sizing.scss";
+@import "px-helpers-design/_generic.helpers.scss";
+
+// Base
+@import "px-flexbox-design/_base.flexbox.scss";
+
+// Meta
+
+// Objects
+
+// Component
+$thresholdMarkerColor: var(--px-threshold-bar-marker-color, black);
+$thresholdScaleColor: var(--px-threshold-bar-scale-font-color, gray);
+$thresholdBarHeight: var(--px-threshold-bar-height, 10px);
+$thresholdBarWidth: var(--px-threshold-bar-width, 200px);
+$thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
+
+.scale__value {
+  text-align: right;
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: $thresholdScaleColor;
+}
+
+.scale__value--first {
+  width: 16px;
+}
+
+.scale__tick {
+  border-right: 1px solid $thresholdScaleColor;
+  height: 0.25rem;
+}
+
+.container {
+  width: $thresholdBarWidth;
+  height: $thresholdBarHeight;
+}
+
+.threshold-bar {
+  height: $thresholdBarHeight;
+}
+
+.marker-line {
+  position: relative;
+  width: $thresholdMarkerLineWidth;
+  min-width: $thresholdMarkerLineWidth;
+  background-color: $thresholdMarkerColor;
+  height: $thresholdBarHeight;
+}
+
+.marker {
+  max-height: 1rem;
+}
+
+.caret {
+  --iron-icon-height: 0.66667rem;
+  --iron-icon-width: 0.66667rem;
+  fill: $thresholdMarkerColor;
+  stroke: $thresholdMarkerColor;
+  position: relative;
+}
+
+.value {
+  max-height: 0.66667rem;
+  color: $thresholdMarkerColor;
+}
+
+.value > span {
+  position: relative;
+  display: inline-block;
+}
+
+:host([hide-scale]) .scale__value {
+  display: none;
+}
+
+// Trumps
