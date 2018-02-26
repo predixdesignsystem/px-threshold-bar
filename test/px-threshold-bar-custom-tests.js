@@ -2,7 +2,7 @@ suite('Custom Automation Tests for px-threshold-bar', function() {
   let thresholdEl;
 
   setup(function(done) {
-    thresholdEl = fixture('px-threshold-bar');
+    thresholdEl = fixture('px_threshold_bar');
     flush(()=>{
       done();
     });
@@ -23,176 +23,130 @@ suite('Custom Automation Tests for px-threshold-bar', function() {
     assert.equal(thresholdEl.config.length, 0);
     assert.isFalse(thresholdEl.hideValue);
     assert.isFalse(thresholdEl.hideScale);
-
     done();
   });
 
   test('Check for 1 threshold configuration', function (done) {
-
     let config = [{
       "min": 0,
       "max": 100,
       "color": "#cc2036",
       "order": 0
     }];
-
-    thresholdEl.config = config;
-
-    setTimeout(function() {
-      let bar = thresholdEl.querySelectorAll('.threshold-bar');
-      let barColor = window.getComputedStyle(bar[1], false)['background-color'];
-
+    thresholdEl.set('config', config);
+    flush(function() {
+      let bar = Polymer.dom(thresholdEl.root).querySelectorAll('.threshold-bar'),
+          barColor = window.getComputedStyle(bar[1], false)['background-color'];
       assert.equal(window.getComputedStyle(bar[0], false)['width'], '16px');
       assert.equal(window.getComputedStyle(bar[1], false)['width'], '200px');
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#cc2036');
       }
       else {
         assert.equal(barColor, 'rgb(204, 32, 54)');
       }
-
       done();
-    }.bind(this));
+    });
   });
 
-  test('Check Show threshold bar scale', function (done) {
-
-    let bar = thresholdEl.querySelector('.threshold-bar'),
-        scale = thresholdEl.querySelectorAll('.scale__value');
-
-    assert.equal(window.getComputedStyle(bar.parentElement, false)['display'], 'flex');
-
+  test('Show threshold bar scale', function (done) {
+    let bar = Polymer.dom(thresholdEl.root).querySelector('.threshold-bar'),
+        scale = Polymer.dom(thresholdEl.root).querySelectorAll('.scale__value');
     scale.forEach(function(scaleEl) {
       assert.equal(window.getComputedStyle(scaleEl, false)['display'], 'block');
     });
-
     done();
   });
 
-  test('Check Hide threshold bar scale', function (done) {
-
-    let bar = thresholdEl.querySelector('.threshold-bar'),
-      scale = thresholdEl.querySelectorAll('.scale__value');
-
+  test('Hide threshold bar scale', function (done) {
     thresholdEl.hideScale = true;
-
-    assert.equal(window.getComputedStyle(bar.parentElement, false)['display'], 'none');
-
-    scale.forEach(function(scaleEl, i) {
-      assert.equal(window.getComputedStyle(scaleEl, false)['display'], i < 2 ? 'block' : 'none');
+    flush(function() {
+      let bar = Polymer.dom(thresholdEl.root).querySelector('.threshold-bar'),
+          scale = Polymer.dom(thresholdEl.root).querySelectorAll('.scale__value');
+      scale.forEach(function(scaleEl, i) {
+        assert.equal(window.getComputedStyle(scaleEl, false)['display'], i < 2 ? 'block' : 'none');
+      });
+      done();
     });
-
-    thresholdEl.hideScale = false;
-
-    done();
   });
 
-  test('Check Set current value', function (done) {
-
-    let value = document.querySelector('.value > span');
-
+  test('Set current value', function (done) {
     thresholdEl.value = '50';
-    assert.equal(value.innerText, '50');
-
-    thresholdEl.value = '81';
-    assert.equal(value.innerText, '81');
-
-    done();
+    flush(function() {
+      let value = Polymer.dom(thresholdEl.root).querySelector('.value > span');
+      assert.equal(value.innerText, '50');
+      done();
+    });
   });
 
   test('Check position of marker in the bar', function (done) {
-
-    let marker = thresholdEl.querySelector('.marker-line'),
-        caret = thresholdEl.querySelector('.fa-caret-down');
-
-    assert.equal(window.getComputedStyle(marker, false)['left'], '178px');
-    assert.equal(window.getComputedStyle(caret, false)['left'], '174px');
-
+    let marker = Polymer.dom(thresholdEl.root).querySelector('.marker-line'),
+        caret = Polymer.dom(thresholdEl.root).querySelector('.caret');
+    assert.equal(window.getComputedStyle(marker, false)['left'], '0px');
+    assert.equal(window.getComputedStyle(caret, false)['left'], 'auto');
     done();
   });
 
   test('Check position of marker in the bar when value is greater than max', function (done) {
-
-    let marker = thresholdEl.querySelector('.marker-line'),
-      caret = thresholdEl.querySelector('.fa-caret-down');
-
     thresholdEl.value = '200';
-
-    assert.equal(window.getComputedStyle(marker, false)['left'], '216px');
-    assert.equal(window.getComputedStyle(caret, false)['left'], '212px');
-
-    done();
+    flush(function() {
+      let marker = Polymer.dom(thresholdEl.root).querySelector('.marker-line'),
+          caret = Polymer.dom(thresholdEl.root).querySelector('.caret');
+      assert.equal(window.getComputedStyle(marker, false)['left'], '200px');
+      assert.equal(window.getComputedStyle(caret, false)['left'], '196px');
+      done();
+    });
   });
 
   test('Check position of marker in the bar when value is less than min', function (done) {
-
-    let marker = thresholdEl.querySelector('.marker-line'),
-      caret = thresholdEl.querySelector('.fa-caret-down');
-
     thresholdEl.value = '-100';
-
-    assert.equal(window.getComputedStyle(marker, false)['left'], '16px');
-    assert.equal(window.getComputedStyle(caret, false)['left'], '12px');
-
-    done();
+    flush(function() {
+      let marker = Polymer.dom(thresholdEl.root).querySelector('.marker-line'),
+          caret = Polymer.dom(thresholdEl.root).querySelector('.caret');
+      assert.equal(window.getComputedStyle(marker, false)['left'], '0px');
+      assert.equal(window.getComputedStyle(caret, false)['left'], '-4px');
+      done();
+    });
   });
 
   test('Check position of marker in the bar when value is negative', function (done) {
-
-    let marker = thresholdEl.querySelector('.marker-line'),
-        caret = thresholdEl.querySelector('.fa-caret-down'),
+    let marker = Polymer.dom(thresholdEl.root).querySelector('.marker-line'),
+        caret = Polymer.dom(thresholdEl.root).querySelector('.caret'),
         config = [{
           "min": -50,
           "max": 50,
           "color": "#cc2036",
           "order": 0
         }];
-
-    thresholdEl.config = config;
+    thresholdEl.set('config', config);
     thresholdEl.value = '0';
     thresholdEl.min = '-50';
     thresholdEl.max = '50';
-
-    assert.equal(window.getComputedStyle(marker, false)['left'], '116px');
-    assert.equal(window.getComputedStyle(caret, false)['left'], '112px');
-
+    assert.equal(window.getComputedStyle(marker, false)['left'], '100px');
+    assert.equal(window.getComputedStyle(caret, false)['left'], '96px');
     done();
   });
 
-  test('Check Set uom', function (done) {
-
-    let value = document.querySelector('.value > span');
-
+  test('Set uom', function (done) {
     thresholdEl.value = '100';
     thresholdEl.uom = '%';
-    assert.equal(value.innerText, '100%');
-
-    done();
+    flush(function() {
+      let value = Polymer.dom(thresholdEl.root).querySelector('.value > span');
+      assert.equal(value.innerText, '100%');
+      done();
+    });
   });
 
-  test('Check Hide current value', function (done) {
-
-    let value = document.querySelector('.value > span');
-
+  test('Hide current value', function (done) {
     thresholdEl.hideValue = true;
-    assert.equal(window.getComputedStyle(value, false)['display'], 'none');
-
-    done();
-  });
-
-  test('Check Show current value', function (done) {
-
-    let value = document.querySelector('.value > span');
-
-    thresholdEl.hideValue = false;
-    assert.equal(window.getComputedStyle(value, false)['display'], 'inline-block');
-
-    done();
+    flush(function() {
+      let value = Polymer.dom(thresholdEl.root).querySelector('.value > span');
+      assert.equal(window.getComputedStyle(value, false)['display'], 'none');
+      done();
+    });
   });
 
   test('Check for 2 thresholds configuration', function (done) {
-
     let config = [
       {
         "min": 0,
@@ -206,39 +160,31 @@ suite('Custom Automation Tests for px-threshold-bar', function() {
         "color": "#f79838",
         "order": 1
       }];
-
-    thresholdEl.config = config;
-
-    setTimeout(function() {
-      let bar = thresholdEl.querySelectorAll('.threshold-bar'),
+    thresholdEl.set('config', config);
+    flush(function() {
+      let bar = Polymer.dom(thresholdEl.root).querySelectorAll('.threshold-bar'),
           barColor = window.getComputedStyle(bar[1], false)['background-color'];
-
       assert.equal(window.getComputedStyle(bar[0], false)['width'], '16px');
       assert.equal(window.getComputedStyle(bar[1], false)['width'], '100px');
       assert.equal(window.getComputedStyle(bar[2], false)['width'], '100px');
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#cc2036');
       }
       else {
         assert.equal(barColor, 'rgb(204, 32, 54)');
       }
-
       barColor = window.getComputedStyle(bar[2], false)['background-color'];
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#f79838');
       }
       else {
         assert.equal(barColor, 'rgb(247, 152, 56)');
       }
-
       done();
-    }.bind(this));
+    });
   });
 
   test('Check for 3 thresholds configuration', function (done) {
-
     let config = [
       {
         min: 0,
@@ -255,44 +201,35 @@ suite('Custom Automation Tests for px-threshold-bar', function() {
         max: 100,
         color: '#6d6d6d'
       }];
-
-    thresholdEl.config = config;
-
-    setTimeout(function() {
-      let bar = thresholdEl.querySelectorAll('.threshold-bar'),
-        barColor = window.getComputedStyle(bar[1], false)['background-color'];
-
+    thresholdEl.set('config', config);
+    flush(function() {
+      let bar = Polymer.dom(thresholdEl.root).querySelectorAll('.threshold-bar'),
+          barColor = window.getComputedStyle(bar[1], false)['background-color'];
       assert.equal(window.getComputedStyle(bar[0], false)['width'], '16px');
       assert.equal(window.getComputedStyle(bar[1], false)['width'], '80px');
       assert.equal(window.getComputedStyle(bar[2], false)['width'], '80px');
       assert.equal(window.getComputedStyle(bar[3], false)['width'], '40px');
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#cc2036');
       }
       else {
         assert.equal(barColor, 'rgb(204, 32, 54)');
       }
-
       barColor = window.getComputedStyle(bar[2], false)['background-color'];
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#f79838');
       }
       else {
         assert.equal(barColor, 'rgb(247, 152, 56)');
       }
-
       barColor = window.getComputedStyle(bar[3], false)['background-color'];
-
       if (barColor[0] === "#") {
         assert.equal(barColor, '#6d6d6d');
       }
       else {
         assert.equal(barColor, 'rgb(109, 109, 109)');
       }
-
       done();
-    }.bind(this));
+    });
   });
 });
