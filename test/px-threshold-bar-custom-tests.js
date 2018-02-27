@@ -79,14 +79,6 @@ suite('Custom Automation Tests for px-threshold-bar', function() {
     });
   });
 
-  test('Check position of marker in the bar', function (done) {
-    let marker = Polymer.dom(thresholdEl.root).querySelector('.marker-line'),
-        caret = Polymer.dom(thresholdEl.root).querySelector('.caret');
-    assert.equal(window.getComputedStyle(marker, false)['left'], '0px');
-    assert.equal(window.getComputedStyle(caret, false)['left'], 'auto');
-    done();
-  });
-
   test('Check position of marker in the bar when value is greater than max', function (done) {
     thresholdEl.value = '200';
     flush(function() {

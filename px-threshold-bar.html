@@ -235,7 +235,7 @@ Custom property | Description | Default
         return 'left: ' + position + 'px;';
       }
 
-      return '';
+      return 'display: none;';
     },
 
     /**
@@ -311,9 +311,9 @@ Custom property | Description | Default
      * Verifies that values were set for the base properties min, max and value.
      */
     _checkValuesSet: function(includeValue) {
-      let min = this.min !== null && this.min !== undefined,
-          max = this.max !== null && this.max !== undefined,
-          value = this.value !== null && this.value !== undefined;
+      let min = this.min !== null && this.min !== undefined && !isNaN(parseFloat(this.min)),
+          max = this.max !== null && this.max !== undefined && !isNaN(parseFloat(this.max)),
+          value = this.value !== null && this.value !== undefined && !isNaN(parseFloat(this.value));
 
       return includeValue ? min && max && value : min && max;
     }
