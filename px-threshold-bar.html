@@ -130,7 +130,7 @@ Custom property | Description | Default
       },
 
       /**
-       * Configuration for the tresholds.
+       * Configuration for the thresholds.
        * The value should be an array of Objects with the following structure:
        *
        *     {
@@ -231,26 +231,32 @@ Custom property | Description | Default
     },
 
     /**
+     * Calculates in pixels the padding that should be applied to all left-aligned elements
+     */
+    _calculatePaddingWidth: function() {
+      const scaleValueEl = Polymer.dom(this.root).querySelector('.scale__value--first');
+      if (scaleValueEl) {
+        const padding = window.getComputedStyle(scaleValueEl, false)['width'];
+        return Number(padding.substr(0, padding.length - 2));
+      }
+      return 0;
+    },
+
+    /**
+     * Utility function to calculate the left offset of chart elements based on the value and scale
+     */
+    _calculateLeftOffset: function() {
+      const position = (Math.min(this.max, Math.max(this.min, this.value)) - this.min) * this._scaleFactor;
+      return this.hideScale ? position : position + this._calculatePaddingWidth();
+    },
+
+    /**
      * Calculates the position of the Marker Line in the threshold bar
      */
     _getMarkerLineStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
-        let position = Number(this.value),
-            padding = 0;
-
-        if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
-          padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
-          padding = Number(padding.substr(0, padding.length - 2));
-        }
-
-        position = position > this.max ? this.max : position;
-        position = position < this.min ? this.min : position;
-        position = (position - this.min) * this._scaleFactor;
-        position = this.hideScale ? position : position + padding;
-
-        return 'left: ' + position + 'px;';
+        return 'left: ' + String(this._calculateLeftOffset()) + 'px;';
       }
-
       return 'display: none;';
     },
 
@@ -259,22 +265,8 @@ Custom property | Description | Default
      */
     _getMarkerStyle: function () {
       if (this._checkValuesSet(true) && this._scaleFactor) {
-        let position = Number(this.value),
-            padding = 0;
-
-        if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
-          padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
-          padding = Number(padding.substr(0, padding.length - 2));
-        }
-
-        position = position > this.max ? this.max : position;
-        position = position < this.min ? this.min : position;
-        position = ((position - this.min) * this._scaleFactor) - 4;
-        position = this.hideScale ? position : position + padding;
-
-        return 'left: ' + position + 'px;';
+        return 'left: ' + String(this._calculateLeftOffset() - 4) + 'px;';
       }
-
       return 'display: none;';
     },
 
@@ -287,31 +279,9 @@ Custom property | Description | Default
       spanEl.style.display = this.hideValue ? 'none' : 'block';
 
         if (this._checkValuesSet(true) && this._scaleFactor) {
-          let spanSize = spanEl.clientWidth;
-
+          const spanSize = spanEl.offsetWidth;
           if (spanSize) {
-            let position = Number(this.value),
-                padding = 0;
-
-            if (Polymer.dom(this.root).querySelector('.scale__value--first')) {
-              padding = window.getComputedStyle(Polymer.dom(this.root).querySelector('.scale__value--first'), false)['width'];
-              padding = Number(padding.substr(0, padding.length - 2));
-            }
-
-            position = position > this.max ? this.max : position;
-            position = position < this.min ? this.min : position;
-            position = ((position - this.min) * this._scaleFactor) - spanSize + 4;
-
-            if (position < 0) {
-              position = Number(this.value) - this.min;
-              position = position > this.max ? this.max : position;
-              position = position < this.min ? this.min : position;
-              position = (position * this._scaleFactor) - 4;
-            }
-
-            position = this.hideScale ? position : position + padding;
-
-            return 'left: ' + position + 'px;';
+            return 'left: ' + String(this._calculateLeftOffset() - (spanSize / 2)) + 'px;';
           }
           else {
             setTimeout(function () {
