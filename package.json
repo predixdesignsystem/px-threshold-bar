@@ -2,7 +2,7 @@
   "name": "px-threshold-bar",
   "author": "General Electric",
   "description": "A linear multi-threshold simple bar chart",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "extName": null,
   "repository": {
