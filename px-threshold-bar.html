@@ -81,7 +81,7 @@ Custom property | Description | Default
           <div class="flex flex--col flex--end">
             <div class="threshold-bar" style$="{{_getStyles(tConfig, _scaleFactor)}}"></div>
             <div class="scale__tick scale__value"></div>
-            <div class="scale__value">{{tConfig.max}}{{uom}}</div>
+            <div class="scale__value" style$="{{_setMaxWidth(tConfig, _scaleFactor)}}">{{tConfig.max}}{{uom}}</div>
           </div>
         </template>
       </div>
@@ -194,6 +194,15 @@ Custom property | Description | Default
       let width = ((config.max - config.min) * this._scaleFactor);
 
       return 'width: ' + width + 'px; ' + 'background-color: ' + config.color + ';';
+    },
+
+    /**
+     * Calculates the width of the specific threshold bars.
+     */
+    _setMaxWidth: function (config) {
+      let width = ((config.max - config.min) * this._scaleFactor)
+
+      return `max-width: ${width}px`;
     },
 
     /**

@@ -48,6 +48,8 @@ $thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
   font-size: 0.8rem;
   font-weight: normal;
   color: $thresholdScaleColor;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .scale__value--first {
@@ -62,6 +64,10 @@ $thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
 .container {
   width: $thresholdBarWidth;
   height: $thresholdBarHeight;
+}
+
+.container > .flex--col {
+  position: relative;
 }
 
 .threshold-bar {
