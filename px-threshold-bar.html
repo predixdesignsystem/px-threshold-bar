@@ -75,7 +75,7 @@ Custom property | Description | Default
             <div class="flex flex--col flex--end" style="margin-right: -1px;">
               <div class="threshold-bar"></div>
               <div class="scale__tick scale__value"></div>
-              <div class="scale__value--first scale__value">{{tConfig.min}}{{uom}}</div>
+              <div class="scale__value--first scale__value" style$="{{_getStartMinWidth(tConfig.min)}}">{{tConfig.min}}{{uom}}</div>
             </div>
           </template>
           <div class="flex flex--col flex--end">
@@ -197,12 +197,19 @@ Custom property | Description | Default
     },
 
     /**
-     * Calculates the width of the specific threshold bars.
+     * Calculates the maximum width for scale labels
      */
     _setMaxWidth: function (config) {
       let width = ((config.max - config.min) * this._scaleFactor)
 
       return `max-width: ${width}px`;
+    },
+
+    /**
+     * Calculates minimum  width for starting scale label
+     */
+    _getStartMinWidth: function(min) {
+      return min > 9 ? "width: 26px;" : "width: 16px;";
     },
 
     /**
