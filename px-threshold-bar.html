@@ -59,6 +59,7 @@ Custom property | Description | Default
 <dom-module id="px-threshold-bar">
   <template>
     <style include="px-threshold-bar-styles"></style>
+    <div id="widthTester"></div>
     <div class="flex flex--col flex--top">
       <div class="value-container flex flex--col">
         <div class="value">
@@ -70,18 +71,18 @@ Custom property | Description | Default
       </div>
       <div class="container flex flex--top">
         <div class="marker-line" style$="{{_getMarkerLineStyle(value, min, max, _scaleFactor, hideScale)}}"></div>
-        <template is="dom-repeat" items="{{config}}" as="tConfig">
+        <template is="dom-repeat" items="{{config}}" as="tConfig" on-dom-change='_onSectionBuild'>
           <template is="dom-if" if="{{!index}}">
-            <div class="flex flex--col flex--end" style="margin-right: -1px;">
+            <div class="section flex flex--col flex--end" style="margin-right: -1px;">
               <div class="threshold-bar"></div>
               <div class="scale__tick scale__value"></div>
               <div class="scale__value--first scale__value" style$="{{_getStartMinWidth(tConfig.min)}}">{{tConfig.min}}{{uom}}</div>
             </div>
           </template>
-          <div class="flex flex--col flex--end">
+          <div class$="{{_getSectionClasses(tConfig, _scaleFactor)}}">
             <div class="threshold-bar" style$="{{_getStyles(tConfig, _scaleFactor)}}"></div>
             <div class="scale__tick scale__value"></div>
-            <div class="scale__value" style$="{{_setMaxWidth(tConfig, _scaleFactor)}}">{{tConfig.max}}{{uom}}</div>
+            <div class="scale__value" style$="{{_setScaleValueStyle(tConfig, _scaleFactor)}}">{{tConfig.max}}{{uom}}</div>
           </div>
         </template>
       </div>
@@ -110,6 +111,14 @@ Custom property | Description | Default
       max: {
         type: Number,
         value: 100
+      },
+
+      /**
+       * cascades labels instead of truncating
+       */
+      cascadeLabels: {
+        type: Boolean,
+        value: true
       },
 
       /**
@@ -183,8 +192,31 @@ Custom property | Description | Default
       '_scaleDataChanged(min,max)'
     ],
 
+    _onSectionBuild: function() {
+      let root = this.root;
+
+      this.debounce('domEndEvent', this._cascadeLabels, 100)
+    },
+
     ready: function() {
       this._refreshStyle = false;
+    },
+
+
+    _getScaleLabelTextWidth: function(config) {
+      let widthTester = Polymer.dom(this.root).querySelector('#widthTester');
+
+      widthTester.innerText = config.max+config.uom;
+      return (widthTester.clientWidth + 1);
+    },
+
+    /**
+     * Resolves the correct classes for each section
+     */
+    _getSectionClasses: function(config) {
+      let classes =  "section flex flex--col flex--end";
+
+      return classes;
     },
 
     /**
@@ -199,10 +231,12 @@ Custom property | Description | Default
     /**
      * Calculates the maximum width for scale labels
      */
-    _setMaxWidth: function (config) {
+    _setScaleValueStyle: function (config) {
       let width = ((config.max - config.min) * this._scaleFactor)
+      let maxWidth = `max-width: ${width}px;`;
+      let overflow = (this.cascadeLabels ? 'overflow: visible;' : '');
 
-      return `max-width: ${width}px`;
+      return `${maxWidth} ${overflow}`;
     },
 
     /**
@@ -244,6 +278,25 @@ Custom property | Description | Default
         });
 
       }
+    },
+
+    /**
+     * Observer that orders the threshold configuration based on the min property.
+     */
+    _cascadeLabels: function() {
+      let _scaleFactor = this._scaleFactor;
+      let scaleValues = Polymer.dom(this.root).querySelectorAll('.scale__tick');
+
+      this.cascadeLabels && this.config.length && this.config.forEach((sectionConfig, i ) => {
+        let sectionWidth = ((sectionConfig.max - sectionConfig.min) * _scaleFactor);
+        let labelTextWidth = this._getScaleLabelTextWidth(sectionConfig);
+
+        if(labelTextWidth > sectionWidth) {
+          scaleValues[i+1].style.height = scaleValues[i].clientHeight+(8*_scaleFactor) + 'px';
+        } else {
+          scaleValues[i+1].style.height = "";
+        }
+      })
     },
 
     /**

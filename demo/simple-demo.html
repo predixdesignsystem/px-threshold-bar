@@ -1,0 +1,89 @@
+<!--
+Copyright (c) 2018, General Electric
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+<!doctype html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>px-threshold-bar Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../polymer/polymer.html" />
+  <link rel="import" href="../px-threshold-bar.html" />
+  <link rel="import" href="../../px-theme/px-theme-styles.html" />
+
+</head>
+
+<body>
+  <dom-bind id="app">
+    <template is="dom-bind" id="app">
+      <custom-style>
+        <style include="px-theme-styles" is="custom-style"></style>
+      </custom-style>
+
+      <div style="width:430px; margin:20px">
+
+        <h2>Examples of px-threshold-bar</h2>
+
+        <div style="margin:30px 0">
+          <h4>10:15:75</h4>
+          <px-threshold-bar
+            min$="{{min}}"
+            max$="{{max}}"
+            config$="{{config}}"
+            value$="{{value}}"
+            uom$="{{uom}}">
+          </px-threshold-bar>
+        </div>
+      </div>
+    </template>
+  </dom-bind>
+  <script>
+    window.addEventListener('WebComponentsReady', function () {
+      var app = document.querySelector('#app');
+      app.min = 0;
+      app.max = 100;
+      app.config = [
+        {
+          "min": 0,
+          "max": 10,
+          "color": "red"
+        },
+        {
+          "min": 10,
+          "max": 15,
+          "color": "blue"
+        },
+        {
+          "min": 15,
+          "max": 30,
+          "color": "green"
+        },
+        {
+          "min": 30,
+          "max": 100,
+          "color": "purple"
+        },
+      ];
+      app.value = 25;
+      app.uom = "%";
+    });
+  </script>
+</body>
+
+</html>

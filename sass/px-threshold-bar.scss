@@ -59,6 +59,10 @@ $thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
 .scale__tick {
   border-right: 1px solid $thresholdScaleColor;
   height: 0.25rem;
+
+  &--cascade {
+    height: 1rem;
+  }
 }
 
 .container {
@@ -106,6 +110,15 @@ $thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
 
 :host([hide-scale]) .scale__value {
   display: none;
+}
+
+#widthTester {
+  position: absolute;
+  visibility: hidden;
+  height: auto;
+  width: auto;
+  white-space: nowrap; /* Thanks to Herb Caudill comment */
+  font-size: 0.8rem;
 }
 
 // Trumps

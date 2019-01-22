@@ -59,6 +59,7 @@ limitations under the License.
           max="{{props.max.value}}"
           config="{{props.config.value}}"
           value="{{props.value.value}}"
+          cascadeLabels="{{props.cascadeLabels.value}}"
           hide-value="{{props.hideValue.value}}"
           hide-scale="{{props.hideScale.value}}"
           uom="{{props.uom.value}}">
@@ -114,11 +115,11 @@ limitations under the License.
                 },
                 {
                   min: -25,
-                  max: -10,
+                  max: -20,
                   color: '#FF8B3A'
                 },
                 {
-                  min: -10,
+                  min: -20,
                   max: 10,
                   color: '#7FAE1B'
                 },
@@ -156,6 +157,12 @@ limitations under the License.
         type: Number,
         defaultValue: 70,
         inputType: 'text'
+      },
+
+      cascadeLabels: {
+        type: Boolean,
+        defaultValue: true,
+        inputType: 'toggle'
       },
 
       uom: {
