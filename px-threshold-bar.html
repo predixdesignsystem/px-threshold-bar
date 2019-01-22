@@ -292,8 +292,14 @@ Custom property | Description | Default
         let labelTextWidth = this._getScaleLabelTextWidth(sectionConfig);
 
         if(labelTextWidth > sectionWidth) {
-          scaleValues[i+1].style.height = scaleValues[i].clientHeight+(8*_scaleFactor) + 'px';
+          let dataHeight = scaleValues[i].getAttribute('data-height');
+          let resolvedDataHeight = parseInt(dataHeight ? dataHeight : 0)
+          let height = resolvedDataHeight + (8*_scaleFactor);
+
+          scaleValues[i+1].setAttribute('data-height', height);
+          scaleValues[i+1].style.height = height + 'px';
         } else {
+          scaleValues[i+1].removeAttribute('data-height');
           scaleValues[i+1].style.height = "";
         }
       })
