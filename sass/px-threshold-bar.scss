@@ -59,10 +59,7 @@ $thresholdMarkerLineWidth: var(--px-threshold-bar-line-width, 1px);
 .scale__tick {
   border-right: 1px solid $thresholdScaleColor;
   height: 0.25rem;
-
-  &--cascade {
-    height: 1rem;
-  }
+  transition: height 300ms cubic-bezier(.22,.77,.23,.78);
 }
 
 .container {
