@@ -47,8 +47,9 @@ limitations under the License.
             max$="{{max}}"
             config$="{{config}}"
             value$="{{value}}"
-            uom$="{{uom}}">
-          </px-threshold-bar>
+            uom$="{{uom}}"
+            cascadeLabels$="{{cascadeLabels}}"
+          ></px-threshold-bar>
         </div>
       </div>
     </template>
@@ -80,6 +81,7 @@ limitations under the License.
           "color": "purple"
         },
       ];
+      app.cascadeLabels = true;
       app.value = 25;
       app.uom = "%";
     });
